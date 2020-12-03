@@ -21,48 +21,58 @@ for line in lines:
     NewDataStr.append(line)
     MapTopology.append(int(line,2))
 
-thisRow = 0
-thisCol = numCols[0]
-RightShiftMagnitude = 3
-trees = 0
+def checkslope(DownShiftMagnitude,RightShiftMagnitude):
+    thisRow = 0
+    thisCol = numCols[0]-1
+    
+    trees = 0
+    while thisRow < len(MapTopology):
+        row = MapTopology[thisRow]
 
-while thisRow < len(MapTopology):
-    row = MapTopology[thisRow]
-
-    print(thisRow,"-----",thisCol)
+        ## Wrap handler
+        if (thisRow==0):
+            thisCol = thisCol
+        elif (thisCol-RightShiftMagnitude)>=0: #Moving right: Normal
+            thisCol -= RightShiftMagnitude
+            #print("norm")
+        elif (thisCol-RightShiftMagnitude)<0: #Moving right: Need to wrap
+            thisCol = numCols[0]+(thisCol-RightShiftMagnitude)
+            #print("right wrap")
+        elif (thisCol-RightShiftMagnitude)>numCols[0]: #Moving left: Need to wrap
+            #print("left wrap")
+            thisCol = ((thisCol-RightShiftMagnitude)-numCols[0])
         
-    if (thisRow==0):
-        thisCol = thisCol
-    elif (thisCol-RightShiftMagnitude)>=0: #Moving right: Normal
-        thisCol -= RightShiftMagnitude
-        print("norm")
-    elif (thisCol-RightShiftMagnitude)<0: #Moving right: Need to wrap
-        thisCol = numCols[0]+(thisCol-RightShiftMagnitude)+1 #watch out here
-        print("right wrap")
-    elif (thisCol-RightShiftMagnitude)>numCols[0]: #Moving left: Need to wrap
-        print("left wrap")
-        thisCol = ((thisCol-RightShiftMagnitude)-numCols[0])-1 #watch out here
-    
-    print("{:031b}".format(row))
-    if (thisCol>0):
-        treeYN = (row >> (thisCol-1)) & 1
-        print("{:031b}".format(1<<(thisCol-1)))
-    else:
-        treeYN = row & 1
-        print("{:031b}".format(1))
-    
-    print(treeYN)
-    
-    
+        #print("Row: ",thisRow,"-----","Column: ",thisCol)
+        #print("Map Row  : ","{:031b}".format(row))
+        #print("Check Row: ","{:031b}".format(1<<(thisCol)))
 
-    #if thisRow == 31:
-        #break
-    
-    
-    if (treeYN):
-        trees = trees+1
-    thisRow += 1
-    print(trees)
+        treeYN = (row >> (thisCol)) & 1
+        #print("Is Tree? : ",treeYN)
 
-#print(trees)
+        if (treeYN):
+            trees = trees+1
+        thisRow += DownShiftMagnitude
+    return trees
+
+Runs = {
+    "1":"1",
+    "1":"3",
+    "1":"5",
+    "1":"7",
+    "2":"1"}
+
+A = checkslope(1,1)
+B = checkslope(1,3)
+C = checkslope(1,5)
+D = checkslope(1,7)
+E = checkslope(2,1)
+print("Count of Trees : ",A)
+print("Count of Trees : ",B)
+print("Count of Trees : ",C)
+print("Count of Trees : ",D)
+print("Count of Trees : ",E)
+ans = A*B*C*D*E
+print(ans)
+
+
 # %%
