@@ -21,21 +21,48 @@ for line in lines:
     NewDataStr.append(line)
     MapTopology.append(int(line,2))
 
-
-sizeCol = numCols[0]
+thisRow = 0
+thisCol = numCols[0]
+RightShiftMagnitude = 3
 trees = 0
-RightShiftMagnitude = 0 #Dont spin the barrel on the first iteration.
-tempRow = []
-for row in MapTopology:
-    print("{:032b}".format(row))
-    tempMapTopology = [] #Reset tempMapTopology
-    for row in MapTopology:
-        tempRow = (row << RightShiftMagnitude) | (row >> (sizeCol - RightShiftMagnitude))
-        tempMapTopology.append(tempRow)
-    MapTopology = tempMapTopology
-    print("{:032b}".format(row))
-    if (row >> (sizeCol-1)):
+
+while thisRow < len(MapTopology):
+    row = MapTopology[thisRow]
+
+    print(thisRow,"-----",thisCol)
+        
+    if (thisRow==0):
+        thisCol = thisCol
+    elif (thisCol-RightShiftMagnitude)>=0: #Moving right: Normal
+        thisCol -= RightShiftMagnitude
+        print("norm")
+    elif (thisCol-RightShiftMagnitude)<0: #Moving right: Need to wrap
+        thisCol = numCols[0]+(thisCol-RightShiftMagnitude)+1 #watch out here
+        print("right wrap")
+    elif (thisCol-RightShiftMagnitude)>numCols[0]: #Moving left: Need to wrap
+        print("left wrap")
+        thisCol = ((thisCol-RightShiftMagnitude)-numCols[0])-1 #watch out here
+    
+    print("{:031b}".format(row))
+    if (thisCol>0):
+        treeYN = (row >> (thisCol-1)) & 1
+        print("{:031b}".format(1<<(thisCol-1)))
+    else:
+        treeYN = row & 1
+        print("{:031b}".format(1))
+    
+    print(treeYN)
+    
+    
+
+    #if thisRow == 31:
+        #break
+    
+    
+    if (treeYN):
         trees = trees+1
-    RightShiftMagnitude = 3 #Spin the barrel this far on all subsequent iterations.
-print(trees)
+    thisRow += 1
+    print(trees)
+
+#print(trees)
 # %%
