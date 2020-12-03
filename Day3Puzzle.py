@@ -1,31 +1,36 @@
 #%%
-f = open("Day3Data.txt", "r")
-linesRaw = f.readlines()
-
-lines = []
-numCols = []
-for line in linesRaw:
-    lines.append(line.strip())
-    numCols.append(len(lines[0]))
-
-NewDataStr = []
-MapTopology = []
-
-Dictionary = {
-    ".":"0",
-    "#":"1"}
-
-for line in lines:
-    for Dict_Key, Dict_Val in Dictionary.items():
-        line = line.replace(Dict_Key, Dict_Val)
-    NewDataStr.append(line)
-    MapTopology.append(int(line,2))
-
-def checkslope(DownShiftMagnitude,RightShiftMagnitude):
-    thisRow = 0
-    thisCol = numCols[0]-1
+def GetMapTopology():
+    f = open("Day3Data.txt", "r")
+    linesRaw = f.readlines()
     
-    trees = 0
+    lines = []
+    
+    for line in linesRaw:
+        lines.append(line.strip())
+
+    Dictionary = {
+        ".":"0",
+        "#":"1"}
+
+    MapTopology = []
+    for line in lines:
+        for Dict_Find, Dict_Repl in Dictionary.items():
+            line = line.replace(Dict_Find, Dict_Repl)
+        MapTopology.append(int(line,2))
+    
+    def GetPisteWidth():
+        PisteWidth = len(lines[0])
+        return PisteWidth
+    
+    PisteWidth = GetPisteWidth()
+
+    return MapTopology,PisteWidth
+
+def GetTreesOnRun(DownShiftMagnitude,RightShiftMagnitude,PisteWidth):
+    thisRow = 0
+    thisCol = PisteWidth-1
+    
+    TreesOnRun = 0
     while thisRow < len(MapTopology):
         row = MapTopology[thisRow]
 
@@ -36,11 +41,11 @@ def checkslope(DownShiftMagnitude,RightShiftMagnitude):
             thisCol -= RightShiftMagnitude
             #print("norm")
         elif (thisCol-RightShiftMagnitude)<0: #Moving right: Need to wrap
-            thisCol = numCols[0]+(thisCol-RightShiftMagnitude)
+            thisCol = PisteWidth+(thisCol-RightShiftMagnitude)
             #print("right wrap")
-        elif (thisCol-RightShiftMagnitude)>numCols[0]: #Moving left: Need to wrap
+        elif (thisCol-RightShiftMagnitude)>PisteWidth: #Moving left: Need to wrap
             #print("left wrap")
-            thisCol = ((thisCol-RightShiftMagnitude)-numCols[0])
+            thisCol = ((thisCol-RightShiftMagnitude)-PisteWidth)
         
         #print("Row: ",thisRow,"-----","Column: ",thisCol)
         #print("Map Row  : ","{:031b}".format(row))
@@ -50,29 +55,27 @@ def checkslope(DownShiftMagnitude,RightShiftMagnitude):
         #print("Is Tree? : ",treeYN)
 
         if (treeYN):
-            trees = trees+1
+            TreesOnRun = TreesOnRun+1
         thisRow += DownShiftMagnitude
-    return trees
+    return TreesOnRun
 
-Runs = {
-    "1":"1",
-    "1":"3",
-    "1":"5",
-    "1":"7",
-    "2":"1"}
+MapTopology,PisteWidth = GetMapTopology()
 
-A = checkslope(1,1)
-B = checkslope(1,3)
-C = checkslope(1,5)
-D = checkslope(1,7)
-E = checkslope(2,1)
-print("Count of Trees : ",A)
-print("Count of Trees : ",B)
-print("Count of Trees : ",C)
-print("Count of Trees : ",D)
-print("Count of Trees : ",E)
-ans = A*B*C*D*E
-print(ans)
+Runs = [
+    [1,1],
+    [1,3],
+    [1,5],
+    [1,7],
+    [2,1]]
 
+TreesPerRun = []
+for down, right in Runs:
+    TreesOnRun = GetTreesOnRun(int(down),int(right),PisteWidth)
+    print("Count of Trees : ",TreesOnRun)
+    TreesPerRun.append(TreesOnRun)
+ProductOfTrees = 1
+for x in TreesPerRun:
+    ProductOfTrees *= x
+print("Product of Trees : ",ProductOfTrees)
 
 # %%
