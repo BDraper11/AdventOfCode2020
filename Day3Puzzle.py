@@ -1,4 +1,6 @@
 #%%
+DEBUG = False
+
 def GetMapTopology():
     f = open("Day3Data.txt", "r")
     linesRaw = f.readlines()
@@ -39,20 +41,20 @@ def GetTreesOnRun(DownShiftMagnitude,RightShiftMagnitude,PisteWidth):
             thisCol = thisCol
         elif (thisCol-RightShiftMagnitude)>=0: #Moving right: Normal
             thisCol -= RightShiftMagnitude
-            #print("norm")
+            if(DEBUG): print("norm")
         elif (thisCol-RightShiftMagnitude)<0: #Moving right: Need to wrap
             thisCol = PisteWidth+(thisCol-RightShiftMagnitude)
-            #print("right wrap")
+            if(DEBUG): print("right wrap")
         elif (thisCol-RightShiftMagnitude)>PisteWidth: #Moving left: Need to wrap
-            #print("left wrap")
+            if(DEBUG): print("left wrap")
             thisCol = ((thisCol-RightShiftMagnitude)-PisteWidth)
         
-        #print("Row: ",thisRow,"-----","Column: ",thisCol)
-        #print("Map Row  : ","{:031b}".format(row))
-        #print("Check Row: ","{:031b}".format(1<<(thisCol)))
+        if(DEBUG): print("Row: ",thisRow,"-----","Column: ",thisCol)
+        if(DEBUG): print("Map Row  : ","{:031b}".format(row))
+        if(DEBUG): print("Check Row: ","{:031b}".format(1<<(thisCol)))
 
         treeYN = (row >> (thisCol)) & 1
-        #print("Is Tree? : ",treeYN)
+        if(DEBUG): print("Is Tree? : ",treeYN)
 
         if (treeYN):
             TreesOnRun = TreesOnRun+1
