@@ -60,18 +60,24 @@ def GetBlocks():
         blocks = lines.split("\n\n")
     return blocks
 
+def GetIDDocs(blocks):
+    IDDocs = []
+    for block in blocks:
+        IDDocs.append(IDDoc(block))
+    return IDDocs
+
+def GetCountValidIDDocs(IDDocs):
+    CountValidIDDocs = 0
+    for IDDoc in IDDocs:
+        if IDDoc.ValidIDDocStatus:
+            CountValidIDDocs += 1
+    return CountValidIDDocs
+
+
 blocks = GetBlocks()
-
-IDDocs = []
-for block in blocks:
-    IDDocs.append(IDDoc(block))
-
-CountValidIDDocs = 0
-for IDDoc in IDDocs:
-    if IDDoc.ValidIDDocStatus:
-        CountValidIDDocs += 1
-
+IDDocs = GetIDDocs(blocks)
+print("Number of valid ID documents : ",GetCountValidIDDocs(IDDocs))
 print("Done")
-print("Number of valid ID documents : ",CountValidIDDocs)
+
 
 # %%
