@@ -25,6 +25,8 @@ class IDDoc:
                     return BirthYear
                 else:
                     return None
+            else:
+                return BirthYear
         def GetIssueYear(self, block):
             IssueYear = GetEntry(self,block,"iyr")
             if ExtdValidityChecksOn:
@@ -37,6 +39,8 @@ class IDDoc:
                     return IssueYear
                 else:
                     return None
+            else:
+                return IssueYear
         def GetExpiryYear(self, block):
             ExpiryYear = GetEntry(self,block,"eyr")
             if ExtdValidityChecksOn:
@@ -49,6 +53,8 @@ class IDDoc:
                     return ExpiryYear
                 else:
                     return None
+            else:
+                return ExpiryYear
         def GetHeight(self, block):
             Height = GetEntry(self,block,"hgt")
             if ExtdValidityChecksOn:
@@ -74,6 +80,8 @@ class IDDoc:
                         return None
                 else:
                     return None
+            else:
+                return Height
         def GetHairColour(self, block):
             HairColour = GetEntry(self,block,"hcl")
             if ExtdValidityChecksOn:
@@ -84,6 +92,8 @@ class IDDoc:
                     return None
                 else:
                     return HairColour
+            else:
+                return HairColour
         def GetEyeColour(self, block):
             EyeColour = GetEntry(self,block,"ecl")
             if ExtdValidityChecksOn:
@@ -94,6 +104,8 @@ class IDDoc:
                     return None
                 else:
                     return EyeColour
+            else:
+                return EyeColour
         def GetPassportID(self, block):
             PassportID = GetEntry(self,block,"pid")
             if ExtdValidityChecksOn:
@@ -102,8 +114,12 @@ class IDDoc:
                     return None
                 elif r.match(PassportID) is None:
                     return None
+                elif len(PassportID) != 9:
+                    return None
                 else:
                     return PassportID
+            else:
+                return PassportID
         def GetCountryID(self, block):
             CountryID = GetEntry(self,block,"cid")
             return CountryID
