@@ -1,6 +1,8 @@
 #%%
+import re
+
 class IDDoc:
-    def __init__(self, block):
+    def __init__(self, block,ExtdValidityChecksOn = 0):
         block = block.split()
 
         def GetEntry(self,block,SearchString):
@@ -9,29 +11,99 @@ class IDDoc:
                     EntryReturn = entry.split(":")[1]
                     break
                 else:
-                    EntryReturn = ''
+                    EntryReturn = None
             return EntryReturn
         def GetBirthYear(self, block):
             BirthYear = GetEntry(self,block,"byr")
-            return BirthYear
+            if ExtdValidityChecksOn:
+                r = re.compile('\d{4}')
+                if BirthYear == None:
+                    return None
+                elif r.match(BirthYear) is None:
+                    return None
+                elif int(BirthYear)>=1920 and int(BirthYear)<=2002:
+                    return BirthYear
+                else:
+                    return None
         def GetIssueYear(self, block):
             IssueYear = GetEntry(self,block,"iyr")
-            return IssueYear
+            if ExtdValidityChecksOn:
+                r = re.compile('\d{4}')
+                if IssueYear == None:
+                    return None
+                elif r.match(IssueYear) is None:
+                    return None
+                elif int(IssueYear)>=2010 and int(IssueYear)<=2020:
+                    return IssueYear
+                else:
+                    return None
         def GetExpiryYear(self, block):
             ExpiryYear = GetEntry(self,block,"eyr")
-            return ExpiryYear
+            if ExtdValidityChecksOn:
+                r = re.compile('\d{4}')
+                if ExpiryYear == None:
+                    return None
+                elif r.match(ExpiryYear) is None:
+                    return None
+                elif int(ExpiryYear)>=2020 and int(ExpiryYear)<=2030:
+                    return ExpiryYear
+                else:
+                    return None
         def GetHeight(self, block):
             Height = GetEntry(self,block,"hgt")
-            return Height
+            if ExtdValidityChecksOn:
+                r = re.compile('\d+\w{2}')
+                if Height == None:
+                    return None
+                elif r.match(Height) is None:
+                    return None
+                elif r.match(Height) is not None:
+                    if Height.find("cm")!=-1:
+                        ThresLow = 150
+                        ThresHigh = 193
+                        Height = Height[:-2]
+                    elif Height.find("in")!=-1:
+                        ThresLow = 59
+                        ThresHigh = 76
+                        Height = Height[:-2]
+                    else:
+                        return None
+                    if int(Height)>=ThresLow and int(Height)<=ThresHigh:
+                        return Height
+                    else:
+                        return None
+                else:
+                    return None
         def GetHairColour(self, block):
             HairColour = GetEntry(self,block,"hcl")
-            return HairColour
+            if ExtdValidityChecksOn:
+                r = re.compile('#\w{6}')
+                if HairColour == None:
+                    return None
+                elif r.match(HairColour) is None:
+                    return None
+                else:
+                    return HairColour
         def GetEyeColour(self, block):
             EyeColour = GetEntry(self,block,"ecl")
-            return EyeColour
+            if ExtdValidityChecksOn:
+                PassList = ['amb','blu','brn','gry','grn','hzl','oth']
+                if EyeColour == None:
+                    return None
+                elif EyeColour not in PassList:
+                    return None
+                else:
+                    return EyeColour
         def GetPassportID(self, block):
             PassportID = GetEntry(self,block,"pid")
-            return PassportID
+            if ExtdValidityChecksOn:
+                r = re.compile('\d{9}')
+                if PassportID == None:
+                    return None
+                elif r.match(PassportID) is None:
+                    return None
+                else:
+                    return PassportID
         def GetCountryID(self, block):
             CountryID = GetEntry(self,block,"cid")
             return CountryID
@@ -40,8 +112,8 @@ class IDDoc:
             for attribute, value in self.__dict__.items():
                 #print(attribute,value)
                 if attribute != "CountryID":
-                    if value == '':
-                        ValidStatus = 0
+                    if value == None:
+                        return 0
             return ValidStatus
 
         self.BirthYear = GetBirthYear(self, block)
@@ -63,7 +135,7 @@ def GetBlocks():
 def GetIDDocs(blocks):
     IDDocs = []
     for block in blocks:
-        IDDocs.append(IDDoc(block))
+        IDDocs.append(IDDoc(block,1))
     return IDDocs
 
 def GetCountValidIDDocs(IDDocs):
