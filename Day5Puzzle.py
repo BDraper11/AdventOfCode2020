@@ -40,30 +40,20 @@ def GetPasses():
     return passes
 
 def GetPlaneStatus(passes):
-    print(max(x.SeatIndex for x in passes))
+    return max(x.SeatIndex for x in passes)
 
 def FindSeat(passes):
-    AllSeats = []
-    AllSeats.append(x.SeatIndex for x in passes)
-    AllSeats.sort()
-    pass
-
+    AllSeatsOccupied = []
+    for x in passes:
+        AllSeatsOccupied.append(x.SeatIndex)
+    AllSeatsOccupied.sort()
+    AllSeatsOccupied = set(AllSeatsOccupied)
+    AllSeats = set(range(min(x.SeatIndex for x in passes),max(x.SeatIndex for x in passes)+1))
+    return next(iter(AllSeats.difference(AllSeatsOccupied)))
 
 if __name__ == "__main__":
     passes = GetPasses()
-    GetPlaneStatus(passes)
-    FindSeat(passes)
-
+    print(GetPlaneStatus(passes))
+    print(FindSeat(passes))
 
 print("Done")
-# %%
-rows = list(range(0,128))
-            for split in rowMap:
-                midpoint = int(len(rows)/2)
-                if split == "B":
-                    rows = rows[midpoint:]
-                elif split == "F":
-                    rows = rows[:midpoint]
-                else:
-                    return None
-            return rows[0]
