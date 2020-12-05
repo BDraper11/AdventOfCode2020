@@ -166,6 +166,3 @@ blocks = GetBlocks()
 IDDocs = GetIDDocs(blocks)
 print("Number of valid ID documents : ",GetCountValidIDDocs(IDDocs))
 print("Done")
-
-
-# %%
