@@ -9,7 +9,7 @@ def GetData(DataRaw): # Pre-process Raw Data.
     Data = DataRaw.split("\n")
     return Data
 
-def CheckValid():
+def CheckValid(StartIdx,Range):
     
 
 if __name__ == "__main__":
