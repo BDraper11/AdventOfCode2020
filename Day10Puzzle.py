@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #%%
+from itertools import permutations
 def GetDataRaw(): # Get Raw Data.
     with open("Day10Data.txt") as f:
         DataRaw = f.read()
@@ -25,11 +26,28 @@ def GetPart1Ans(DiffArray):
     Ans = Count1*Count3
     return Ans
 
+def Part2():
+    StartIdx = 0
+    EndIdx = 0
+    RangeIdxs = list()
+    for i,r in enumerate(DiffArray):
+        if r == 3:
+            EndIdx = i
+            RangeIdxs.append([StartIdx,EndIdx])
+            StartIdx = EndIdx+1
+    MaxDiff = 0
+    for r in RangeIdxs:
+        MaxDiff = max((r[1]-r[0]),MaxDiff)
+
+
+
+    return 0
+
 if __name__ == "__main__":
     DataRaw = GetDataRaw()
     Data = GetData(DataRaw)
     DiffArray = GetDiffArray()
     print(GetPart1Ans(DiffArray))
+    Part2()
 
 print("Done")
-# %%
